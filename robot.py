@@ -14,6 +14,7 @@ class Apollo(wpilib.TimedRobot):
 
         self.drive = DifferentialDrive(self.left_drive_motor_group, self.right_drive_motor_group)
         self.drive_rev = False
+        self.speedRatio = 0.5
 
         self.lift_motor = wpilib.SpeedControllerGroup(wpilib.Spark(4), wpilib.Spark(5))
         self.lift_motor_speed = 0.0
@@ -51,8 +52,14 @@ class Apollo(wpilib.TimedRobot):
             self.xbox_axis[i] = self.xbox.getRawAxis(i)
 
     def drive_control(self):
-        lh_y = self.xbox.getY(self.xbox.Hand.kLeft) * (1 / 2)
-        rh_x = self.xbox.getX(self.xbox.Hand.kRight) * (1 / 2)
+        if self.xbox.getAButtonPressed():
+            if self.speedRatio == 2/3:
+                self.speedRatio = 0.5
+            elif self.speedRatio == 0.5:
+                self.speedRatio = 2/3
+
+        lh_y = self.xbox.getY(self.xbox.Hand.kLeft) * self.speedRatio  # incr speed from 1/2 to 2/3
+        rh_x = self.xbox.getX(self.xbox.Hand.kRight) * 2/3
 
         if self.xbox.getStickButtonPressed(self.xbox.Hand.kLeft) \
                 or self.xbox.getStickButtonPressed(self.xbox.Hand.kRight):
