@@ -1,1 +1,7 @@
+# ignore dir
+.pytest_cache/
+venv/
 .idea/
+
+# files
+.pyc*
